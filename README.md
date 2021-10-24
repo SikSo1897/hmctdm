@@ -28,10 +28,6 @@ library(hmctdm)
 ``` r
 HOME_TORSTAN <- "path/to/torsten"
 suppressMessages(set_cmdstan_path(file.path(HOME_TORSTAN, 'cmdstan')))
-
-hmctdm <- hmctdmr::hmctdmrest(drug="amikacin")
-
-print(hmctdm)
 ```
 #### 2) bring data set
 ```r
