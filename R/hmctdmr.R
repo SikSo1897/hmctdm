@@ -10,10 +10,6 @@
 #   data, 
 
 # ){}
-
-# HOME_TORSTAN <- "/home/sikso/work/00_Private/simulation/lib/Torsten"
-# suppressMessages(set_cmdstan_path(file.path(HOME_TORSTAN, 'cmdstan')))
-
 hmctdmrest <- function(drug=NULL, 
                     data=NULL,
                     prior=NULL, 

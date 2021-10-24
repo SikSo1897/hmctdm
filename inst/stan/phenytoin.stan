@@ -43,15 +43,24 @@ data {
   real rate[nt];
   real ii[nt];
 
-  real CLCR[nt];
+  real CrCL[nt];
   real LBW[nt];  
   real WT[nt];
 
+  real Prior_Vmax;
+  real Prior_Km;
+  real Prior_VD_NR; 
+ 
+  real Prior_Vmax_omega;
+  real Prior_Km_omega;
+  real Prior_VD_NR_omega;
 }
 
 transformed data{
+
   int nCmt = 1;
   real CL_SLOPE=0.01;
+
 }
 parameters{
   real ln_Vmax;
@@ -67,7 +76,7 @@ transformed parameters  {
   real Km = exp(ln_Km);
   real VD_NR = exp(ln_VD_NR);
   
-  real CL = CL_SLOPE * CLCR[1] * 60 / 1000;
+  real CL = CL_SLOPE * CrCL[1] * 60 / 1000;
   real VD = VD_NR * LBW[1];
 
   row_vector[nt] cHat;
@@ -93,14 +102,9 @@ transformed parameters  {
 model {
 
    /* ... declarations ... statements ... */
-
-  //  VD_NR ~ lognormal(log(0.8), cv_to_sd(0.2));
-  //  Km ~ lognormal(log(5.0), cv_to_sd(0.5));
-  //  Vmax ~ lognormal(log(500), cv_to_sd(0.3));
-
-   ln_VD_NR ~ normal(log(0.8), cv_to_sd(0.2));
-   ln_Km ~ normal(log(5.0), cv_to_sd(0.2));
-   ln_Vmax ~ normal(log(500), cv_to_sd(0.2));
+   ln_Vmax ~ normal(log(Prior_Vmax_omega), Prior_Vmax_omega);
+   ln_Km ~ normal(log(Prior_Km_omega), Prior_Km_omega);
+   ln_VD_NR ~ normal(log(Prior_VD_NR_omega), Prior_VD_NR_omega);
 
    for (i in 1:nObs){
     cObs[i] ~ normal(cHatObs[i], sigmaEPS[i]);

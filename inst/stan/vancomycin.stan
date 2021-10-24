@@ -42,25 +42,24 @@ data {
   real rate[nt];
   real ii[nt];
   
-  real<lower=0> CLCR[nt];
+  real<lower=0> CrCL[nt];
   real<lower=0> LBW[nt];
+
+  real Prior_CL_NR;
+  real Prior_VC_NR;
+  real Prior_CL_SLOPE;
+  real Prior_k12;
+  real Prior_k21;
+
+  real Prior_CL_NR_omega;
+  real Prior_VC_NR_omega;
+  real Prior_CL_SLOPE_omega;
+  real Prior_k12_omega;
+  real Prior_k21_omega;
 
 }
 
 transformed data{
-  
-  // @ Prior
-  real TV_CL_NR = 0.05;
-  real TV_VC_NR = 0.21; 
-  real TV_CL_SLOPE = 0.75;
-  real TV_k12 = 1.12;
-  real TV_k21 = 0.48;
-
-  real OMEGA_VC_NR = cv_to_sd(0.15);
-  real OMEGA_CL_NR = cv_to_sd(0.2);
-  real OMEGA_CL_SLOPE = cv_to_sd(0.33);
-  real OMEGA_k12 = cv_to_sd(0.25);
-  real OMEGA_k21 = cv_to_sd(0.25);
   
   int nTheta = 4;
   int nCmt = 2;
@@ -83,7 +82,7 @@ transformed parameters {
 
   real<lower=0> sigmaEPS[nObs];
   
-  real CL = ( CL_NR *  max(LBW) + CL_SLOPE * max(CLCR) ) * 60 / 1000;
+  real CL = ( CL_NR *  max(LBW) + CL_SLOPE * max(CrCL) ) * 60 / 1000;
   real VC = VC_NR *  max(LBW);
   real VP = k12/k21 * VC;
 
@@ -104,11 +103,11 @@ transformed parameters {
 
 model {
 
-  CL_NR ~ lognormal(log(TV_CL_NR), OMEGA_CL_NR);
-  VC_NR ~ lognormal(log(TV_VC_NR), OMEGA_VC_NR);
-  CL_SLOPE ~ lognormal(log(TV_CL_SLOPE), OMEGA_CL_SLOPE);
-  k12 ~ lognormal(log(TV_k12), OMEGA_k12);
-  k21 ~ lognormal(log(TV_k21), OMEGA_k21);
+  CL_NR ~ lognormal(log(Prior_CL_NR), Prior_CL_NR_omega);
+  VC_NR ~ lognormal(log(Prior_VC_NR), Prior_VC_NR_omega);
+  CL_SLOPE ~ lognormal(log(Prior_CL_SLOPE), Prior_CL_SLOPE_omega);
+  k12 ~ lognormal(log(Prior_k12), Prior_k12_omega);
+  k21 ~ lognormal(log(Prior_k21), Prior_k21_omega);
 
   for ( i in 1:nObs){
     cObs[i] ~ normal(cHatObs[i], sigmaEPS[i]);

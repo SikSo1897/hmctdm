@@ -40,22 +40,21 @@ data {
   real rate[nt];
   real ii[nt];
   
-  real<lower=0> CLCR[nt];
+  real<lower=0> CrCL[nt];
   real<lower=0> LBW[nt];
   
+  real ka;
+
+  real Prior_VC_NR; 
+  real Prior_CL_NR;
+
+  real Prior_VC_NR_omega;
+  real Prior_CL_NR_omega;
+
 }
 
 transformed data{
   
-  // @ Prior
-  real TV_VC_NR = 0.5; 
-  real TV_CL_NR = 40;
-
-  real OMEGA_VC_NR = cv_to_sd(0.2);
-  real OMEGA_CL_NR = cv_to_sd(0.15);
-  
-  real KA = 0.27;
-
   int nTheta = 3;
   int nCmt = 2;
 
@@ -78,7 +77,7 @@ transformed parameters {
   
   theta[1] = CL;
   theta[2] = VC;
-  theta[3] = KA;
+  theta[3] = ka;
 
   matrix[nCmt, nt] x = pmx_solve_rk45(OneCptOral_Model, nCmt, time, amt, rate, ii, evid, cmt, addl, ss, theta, 1e-5, 1e-8, 1e5);
 
@@ -92,8 +91,8 @@ transformed parameters {
 
 model {
 
-  CL_NR ~ lognormal(log(TV_CL_NR), OMEGA_CL_NR);
-  VC_NR ~ lognormal(log(TV_VC_NR), OMEGA_VC_NR);
+  CL_NR ~ lognormal(log(Prior_CL_NR), Prior_CL_NR_omega);
+  VC_NR ~ lognormal(log(Prior_VC_NR), Prior_VC_NR_omega);
 
   for ( i in 1:nObs){
     cObs[i] ~ normal(cHatObs[i], sigmaEPS[i]);
