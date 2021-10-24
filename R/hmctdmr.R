@@ -22,9 +22,6 @@ hmctdmrest <- function(drug=NULL,
 ){
   object <- list(status="init")
   
-  # class(object) <- "hmctdm"
-
-  # print(object)
   object <- object %>% 
               preprocess_valid_container( 
                                           drug, 
@@ -39,15 +36,9 @@ hmctdmrest <- function(drug=NULL,
 
   object$stan_result <- stan_result
   object <- hmctdmr_postprocess(object)
+
   class(object) <- "hmctdm"
 
   return(object)
-
-  # list(
-  #   stan_output = fit,
-  #   mrgmod = mrgmod,
-  #   post = post,
-  #   table = table,
-  # )
 
 }

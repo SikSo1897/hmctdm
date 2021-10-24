@@ -1,4 +1,9 @@
-### Installation
+# hmctdm 
+
+<!-- badges: start -->
+[![](https://img.shields.io/badge/Citation-NULL-blue.svg)](#)
+
+## Installation
 
 You can install development version from github by executing the following code in R console.
 
@@ -14,11 +19,11 @@ hmctdm relies on
 cmdstanr path
 
 ``` r
-HOME_TORSTAN <- "path/to/torsten"
-suppressMessages(set_cmdstan_path(file.path(HOME_TORSTAN, 'cmdstan')))
+HOME_TORSTEN <- "path/to/torsten"
+suppressMessages(set_cmdstan_path(file.path(HOME_TORSTEN, 'cmdstan')))
 ```
 
-### Example
+## Example
 ``` r
 library(cmdstanr)
 library(hmctdm)
@@ -26,12 +31,8 @@ library(hmctdm)
 
 #### 1) set cmdstan path
 ``` r
-HOME_TORSTAN <- "path/to/torsten"
-suppressMessages(set_cmdstan_path(file.path(HOME_TORSTAN, 'cmdstan')))
-
-hmctdm <- hmctdmr::hmctdmrest(drug="amikacin")
-
-print(hmctdm)
+HOME_TORSTEN <- "path/to/torsten"
+suppressMessages(set_cmdstan_path(file.path(HOME_TORSTEN, 'cmdstan')))
 ```
 #### 2) bring data set
 ```r
@@ -46,7 +47,7 @@ print(hmctdm)
 
 ``` r
 # search stan_file ..
-# find stan_file : /home/sikso/work/00_Private/hmctdm/inst/stan/amikacin.stan
+# find stan_file : /path/to/package_dir/hmctdm/inst/stan/amikacin.stan
 # Compiling Stan program...
 # Running MCMC with 4 sequential chains...
 # 
