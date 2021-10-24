@@ -42,7 +42,7 @@ print(hmctdm)
 
 ``` r
 # search stan_file ..
-# find stan_file : /home/sikso/work/00_Private/hmctdm/inst/stan/amikacin.stan
+# find stan_file : /path/to/package_dir/hmctdm/inst/stan/amikacin.stan
 # Compiling Stan program...
 # Running MCMC with 4 sequential chains...
 # 
