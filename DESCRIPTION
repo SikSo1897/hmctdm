@@ -1,4 +1,4 @@
-Package: hmctdm
+Package: hmctdmr
 Title: What the Package Does (One Line, Title Case)
 Version: 0.0.0.9000
 Authors@R: 
@@ -14,3 +14,15 @@ Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
+Imports: 
+    dplyr,
+    ggplot2,
+    mrgsolve (>= 0.10.9),
+    stringr,
+    tibble,
+    cmdstanr,
+    tidyr
+URL: https://github.com/SikSo1897/hmctdm
+BugReports: https://github.com/SikSo1897/hmctdm/issues
+Suggests: 
+    knitr

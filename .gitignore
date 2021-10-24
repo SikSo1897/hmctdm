@@ -71,3 +71,11 @@ po/*~
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,r
 .Rproj.user
+
+# torsten
+lib
+test
+stan_output
+stanc
+.vscode/settings.json
+inst/stan/amikacin
