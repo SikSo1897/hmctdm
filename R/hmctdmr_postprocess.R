@@ -14,7 +14,7 @@ hmctdmr_postprocess <- function(hmctdm){
 
   fit <- hmctdm$stan_result$fit$summary()
 
-  not_pk_pattern <- "cHat|lp|theta|x|sigma"
+  not_pk_pattern <- "cHat|lp|theta|x|sigma|parms|ln_"
 
   pk_parm <- fit %>% filter(!stringr::str_detect(variable, not_pk_pattern))
   
@@ -30,7 +30,10 @@ hmctdmr_postprocess <- function(hmctdm){
   post$data <- hmctdm$data
   post$est <- hmctdm$data
   post$est$cHat <- with(cHat, as.array(cHat))
-
+  post$prior <- tibble(
+                        parameter=names(hmctdm$prior),
+                        value=hmctdm$prior %>% unlist
+                      )
   print(post$data)
 
   idata <- post$data %>% 
@@ -42,6 +45,8 @@ hmctdmr_postprocess <- function(hmctdm){
   
   post$idata <- idata
 
+  mrgmod <- hmctdmr_mrgsolve(hmctdm)
+  
   class(post) <- "hmctdm"
 
   return(post)

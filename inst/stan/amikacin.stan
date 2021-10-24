@@ -39,24 +39,20 @@ data {
   
   real<lower=0> CrCL[nt];
   real<lower=0> LBW[nt];
+
+  real Prior_CL_NR;
+  real Prior_VD_NR; 
+  real Prior_CL_SLOPE;
+ 
+  real Prior_CL_NR_omega;
+  real Prior_VD_NR_omega;
+  real Prior_CL_SLOPE_omega;
+  
 }
 
 transformed data{
-
-  real Dose = max(amt);
-  real Tk = max(amt)/max(rate);
-
   int nTheta = 2;
   int nCmt = 1;
-
-  real TV_CL_NR = 0.0417;
-  real TV_VD_NR = 0.27; 
-  real TV_CL_SLOPE = 0.815;
- 
-  real OMEGA_CL_NR = cv_to_sd(0.25);
-  real OMEGA_VD_NR = cv_to_sd(0.3);
-  real OMEGA_CL_SLOPE = cv_to_sd(0.4);
-  
 }
 
 parameters {
@@ -92,9 +88,9 @@ transformed parameters {
 
 model {
 
-  CL_NR ~ lognormal(log(TV_CL_NR), OMEGA_CL_NR);
-  VD_NR ~ lognormal(log(TV_VD_NR), OMEGA_VD_NR);
-  CL_SLOPE ~ lognormal(log(TV_CL_SLOPE), OMEGA_CL_SLOPE);
+  CL_NR ~ lognormal(log(Prior_CL_NR), Prior_CL_NR_omega);
+  VD_NR ~ lognormal(log(Prior_VD_NR), Prior_VD_NR_omega);
+  CL_SLOPE ~ lognormal(log(Prior_CL_SLOPE), Prior_CL_SLOPE_omega);
 
   for ( i in 1:nObs){
     cObs[i] ~ normal(cHatObs[i], sigmaEPS[i]);

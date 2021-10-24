@@ -15,6 +15,10 @@ print.hmctdm <- function(hmctdm, ...){
   print(hmctdm$stan_sample_option)
   
   cat("\n")
+  cat("Prior Information: \n")
+  print(hmctdm$prior)
+
+  cat("\n")
   cat("Estimated PK Parameters: \n")
   print(hmctdm$param)
 
