@@ -123,7 +123,6 @@ print(hmctdm)
 
 ```
 ## Specific
-`hmctdmrest`는 다음과 같은 파라미터를 부여 할 수 있습니다.
 ```r
 hmctdmrest <- function(drug=NULL, 
                     data=NULL,
@@ -133,14 +132,13 @@ hmctdmrest <- function(drug=NULL,
                     ...
 }
 ```
+hmctdmrest can be given the following parameters:
 #### `drug`
   - `amikacin`
   - `vancomycin`
   - `theophiline`
   - `phenytoine`
 #### `data`
-  - ID, evid, amt, cmt, ss, ii, addl, rate
-  - SEX, AGE, WT, HT, DV
 #### `prior`
 It can be changed by passing the prior parameter in the list.
 ```r
