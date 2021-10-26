@@ -172,8 +172,8 @@ mrgmod
 mrgmod %>%
   mrgsolve::plot(IPRED ~ time)
 ```
-![](man/figures/README-plot1-1.png)
-  
+[![](man/figures/README-plot1-1.png)](#)
+
 ## Specific
 `hmctdmrest` takes the following parameters:
 
