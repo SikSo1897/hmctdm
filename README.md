@@ -123,7 +123,7 @@ print(hmctdm)
 
 ```
 #### 4) predict concentration
-The concentration at the new time point is predicted using the mrgsolve model, which is the same as the pharmacokinetic model used for estimation. The result contains an mrgsolve model object. This object can use generic functions. More details can be found [here](https://mrgsolve.github.io/).
+The concentration at the new time point is predicted using the mrgsolve model, which is the same as the pharmacokinetic model used for estimation. The result contains an mrgsolve model object.
 
 ```r 
 
@@ -167,7 +167,7 @@ mrgmod
 # 7:   1  2.5    0    0   0  0  0    0    0   1  79 43.98 155.7 43.98 1.072 1.668 14.75 51.10
 # 8:   1  3.0    0    0   0  0  0    0    0   1  79 43.98 155.7 43.98 1.072 1.668 14.75 48.29
 ```
-
+This object can use generic functions. More details can be found [here](https://mrgsolve.github.io/). below is generic functions example.  
 ``` r
 mrgmod %>%
   mrgsolve::plot(IPRED ~ time)
