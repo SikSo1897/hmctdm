@@ -134,11 +134,13 @@ hmctdmrest <- function(drug=NULL,
 ```
 hmctdmrest can be given the following parameters:
 #### `drug`
-  - `amikacin`
-  - `vancomycin`
-  - `theophiline`
-  - `phenytoine`
+  - amikacin
+  - vancomycin
+  - theophiline
+  - phenytoine
+  
 #### `data`
+
 #### `prior`
 It can be changed by passing the prior parameter in the list.
 ```r
@@ -175,10 +177,10 @@ hmctdm <- hmctdmr::hmctdmrest(
 ```
 #### `stan_model_option` 
 
-`stan_model_option` is an option for creating a new CmdStanModel object from a file containing a Stan program. More information on the options can be found [here](https://mc-stan.org/cmdstanr/reference/cmdstan_model.html) 
+stan_model_option is an option for creating a new CmdStanModel object from a file containing a Stan program. More information on the options can be found [here](https://mc-stan.org/cmdstanr/reference/cmdstan_model.html) 
 
 #### `stan_sample_option`
-`stan_sample_option` is option of `$sample()` method CmdStanModel objcet runs the default MCMC algorithm in CmdStan (algorithm = hmc, engine=nuts). More information on the options can be found [here](https://mc-stan.org/cmdstanr/reference/model-method-sample.html)
+stan_sample_option is option of `$sample()` method CmdStanModel objcet runs the default MCMC algorithm in CmdStan (algorithm = hmc, engine=nuts). More information on the options can be found [here](https://mc-stan.org/cmdstanr/reference/model-method-sample.html)
 
 ## Development
 hmctdm is under development. Your feedback for additional feature requests or bug reporting is welcome. Contact us through the issue tracker.
