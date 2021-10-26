@@ -81,14 +81,14 @@ print(hmctdm)
 
 # Stan sample option: 
 # # A tibble: 1 × 3
-#   option            dir                                           compile
-#   <chr>             <chr>                                         <chr>  
+#   option            dir       compile
+#   <chr>             <chr>     <chr>  
 # 1 stan_model_option .../stanc TRUE   
 
 # Stan model option: 
 # # A tibble: 1 × 7
-#   option             chains thin  iter_warmup iter_sampling output_dir                                          adapt_delta
-#   <chr>              <chr>  <chr> <chr>       <chr>         <chr>                                               <chr>      
+#   option             chains thin  iter_warmup iter_sampling output_dir      adapt_delta
+#   <chr>              <chr>  <chr> <chr>       <chr>         <chr>           <chr>      
 # 1 stan_sample_option 4      1     2500        2500          .../stan_output 0.95       
 
 # Prior Information: 
