@@ -34,7 +34,6 @@ hmctdmr_postprocess <- function(hmctdm){
                         parameter=names(hmctdm$prior),
                         value=hmctdm$prior %>% unlist
                       )
-  print(post$data)
 
   idata <- post$data %>% 
             filter(evid==1)  %>%
