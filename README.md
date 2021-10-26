@@ -83,13 +83,13 @@ print(hmctdm)
 # # A tibble: 1 × 3
 #   option            dir                                           compile
 #   <chr>             <chr>                                         <chr>  
-# 1 stan_model_option /home/sikso/work/00_Private/hmctdm/test/stanc TRUE   
+# 1 stan_model_option .../stanc TRUE   
 
 # Stan model option: 
 # # A tibble: 1 × 7
 #   option             chains thin  iter_warmup iter_sampling output_dir                                          adapt_delta
 #   <chr>              <chr>  <chr> <chr>       <chr>         <chr>                                               <chr>      
-# 1 stan_sample_option 4      1     2500        2500          /home/sikso/work/00_Private/hmctdm/test/stan_output 0.95       
+# 1 stan_sample_option 4      1     2500        2500          .../stan_output 0.95       
 
 # Prior Information: 
 # # A tibble: 6 × 2
@@ -132,7 +132,7 @@ hmctdm <- hmctdmr::hmctdmrest(drug="amikacin", data="your_data_set")
 hmctdm$mrgmod                                                                                                                                                         
 # ---------------  source: amikacin.cpp  ---------------
 
-#   project: /home/sikso/work...inst/mrgsolve
+#   project: ...inst/mrgsolve
 #   shared object: amikacin-so-22cda12102f 
 
 #   time:          start: 0 end: 30 delta: 0.5
