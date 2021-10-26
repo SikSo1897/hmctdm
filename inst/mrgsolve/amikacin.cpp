@@ -31,6 +31,6 @@ dxdt_CENT   =  -CL * CP;
 double IPRED = CP;
 
 [ capture ] @annotated
-IPRED   : Individual-predicted concenrtation (mg/L)
 CL      : clearance
 VD      : Vd
+IPRED   : Individual-predicted concenrtation (mg/L)

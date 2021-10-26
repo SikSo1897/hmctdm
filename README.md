@@ -122,8 +122,61 @@ print(hmctdm)
 # 1  1   1  79 43.97928 43.97928 155.7253 1.072065 33.95356 0.0418793 0.334881 0.853423 1.85247 14.72785
 
 ```
+#### 4) predict concentration
+The concentration at the new time point is predicted using the mrgsolve model, which is the same as the pharmacokinetic model used for estimation. The result contains an mrgsolve model object. This object can use generic functions. More details can be found [here](https://mrgsolve.github.io/).
+
+```r 
+
+hmctdm <- hmctdmr::hmctdmrest(drug="amikacin", data="your_data_set")
+
+hmctdm$mrgmod                                                                                                                                                         
+# ---------------  source: amikacin.cpp  ---------------
+
+#   project: /home/sikso/work...inst/mrgsolve
+#   shared object: amikacin-so-22cda12102f 
+
+#   time:          start: 0 end: 30 delta: 0.5
+#                  add: <none>
+
+#   compartments:  CENT [1]
+#   parameters:    WT LBW CLCR CL_NR CL_SLOPE VD_NR
+#                  VD_SLOPE UNIT_CL [8]
+#   captures:      CL VD IPRED [3]
+#   omega:         0x0 
+#   sigma:         0x0 
+
+#   solver:        atol: 1e-08 rtol: 1e-05 maxsteps: 20k
+# ------------------------------------------------------
+
+mrgmod <- hmctdm$mrgmod %>%  
+  mrgsolve::ev(amt=1000) %>% 
+  mrgsolve::mrgsim(end=48, delta=0.5)  
+
+mrgmod
+# Model:  amikacin 
+# Dim:    98 x 18 
+# Time:   0 to 48 
+# ID:     1 
+#     ID time evid  amt cmt ss ii addl rate SEX AGE    WT    HT   LBW   SCR    CL    VD IPRED
+# 1:   1  0.0    0    0   0  0  0    0    0   1  79 43.98 155.7 43.98 1.072 1.668 14.75  0.00
+# 2:   1  0.0    1 1000   1  0  0    0    0   1  79 43.98 155.7 43.98 1.072 1.668 14.75 67.79
+# 3:   1  0.5    0    0   0  0  0    0    0   1  79 43.98 155.7 43.98 1.072 1.668 14.75 64.06
+# 4:   1  1.0    0    0   0  0  0    0    0   1  79 43.98 155.7 43.98 1.072 1.668 14.75 60.54
+# 5:   1  1.5    0    0   0  0  0    0    0   1  79 43.98 155.7 43.98 1.072 1.668 14.75 57.21
+# 6:   1  2.0    0    0   0  0  0    0    0   1  79 43.98 155.7 43.98 1.072 1.668 14.75 54.07
+# 7:   1  2.5    0    0   0  0  0    0    0   1  79 43.98 155.7 43.98 1.072 1.668 14.75 51.10
+# 8:   1  3.0    0    0   0  0  0    0    0   1  79 43.98 155.7 43.98 1.072 1.668 14.75 48.29
+```
+
+``` r
+mrgmod %>%
+  mrgsolve::plot(IPRED ~ time)
+```
+![](man/figures/README-plot1-1.png)
+  
 ## Specific
-`hmctdmrest`는 다음과 같은 파라미터를 부여 할 수 있습니다.
+`hmctdmrest` takes the following parameters:
+
 ```r
 hmctdmrest <- function(drug=NULL, 
                     data=NULL,

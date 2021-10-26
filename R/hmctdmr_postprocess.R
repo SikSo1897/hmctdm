@@ -43,9 +43,15 @@ hmctdmr_postprocess <- function(hmctdm){
             )
   
   post$idata <- idata
-
-  mrgmod <- hmctdmr_mrgsolve(hmctdm)
   
+  mrgmod <- hmctdmr_mrgsolve(hmctdm)
+  post$mrgmod <- mrgmod %>% 
+                  mrgsolve::idata_set(post$idata) %>%
+                  mrgsolve::carry_out(
+                    cmt, ii, addl, rate, amt, evid, ss,
+                    SEX, AGE, WT, HT, LBW, SCR, CLCR)
+
+
   class(post) <- "hmctdm"
 
   return(post)

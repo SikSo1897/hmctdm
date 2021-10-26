@@ -31,11 +31,8 @@ dxdt_CENT    = -(CL + (Norm_Vmax/24) / (Km + CP)) * CP;
 double IPRED = CP;
 
 [ capture ] @annotated
-Norm_Vmax  : Norm_Vmax
 Vmax       : Vmax
 Km         : Km
-VD_NR      : VD_NR
-CL_SLOPE   : CL_SLOPE
 VD         : VD
 CL         : CL
 IPRED      : Individual-predicted concenrtation (mg/L)
