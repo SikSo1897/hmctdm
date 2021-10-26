@@ -43,7 +43,7 @@ data {
   real<lower=0> CrCL[nt];
   real<lower=0> LBW[nt];
   
-  real ka;
+  real Prior_ka;
 
   real Prior_VC_NR; 
   real Prior_CL_NR;
@@ -77,7 +77,7 @@ transformed parameters {
   
   theta[1] = CL;
   theta[2] = VC;
-  theta[3] = ka;
+  theta[3] = Prior_ka;
 
   matrix[nCmt, nt] x = pmx_solve_rk45(OneCptOral_Model, nCmt, time, amt, rate, ii, evid, cmt, addl, ss, theta, 1e-5, 1e-8, 1e5);
 

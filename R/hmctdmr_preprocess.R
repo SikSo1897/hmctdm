@@ -29,7 +29,7 @@ preprocess_valid_data <- function(object, data){
 
 		message("data format")
 
-		sample.data <- read.csv(base::file.path(sampleLib(), paste0(object$drug, ".csv")))
+		sample.data <-get_sample_data(object$drug)
 
 		object$status <- "Sample"
 		data <- sample.data
@@ -54,53 +54,8 @@ preprocess_valid_prior <- function(object, prior) {
 
 	new_prior <- NULL
 
-	x <- 	switch(object$drug,
-
-		"amikacin" = list(
-										name = c("CL_NR", "VD_NR", "CL_SLOPE", 
-															"CL_NR_omega", "VD_NR_omega", "CL_SLOPE_omega"),
-
-										stan_prior_name = c("Prior_CL_NR", "Prior_VD_NR", "Prior_CL_SLOPE", 
-																					"Prior_CL_NR_omega", "Prior_VD_NR_omega", "Prior_CL_SLOPE_omega"),
-
-										value = c(0.0417, 0.27, 0.815, 
-															cv_to_sd(0.25), cv_to_sd(0.3), cv_to_sd(0.4))
-									),
-									
-		"vancomycin"= list(
-										name = c("CL_NR", "VC_NR", "CL_SLOPE", "k12", "k21",
-														 	"CL_NR_omega", "VC_NR_omega", "CL_SLOPE_omega", "k12_omega", "k21_omega"),
-
-										stan_prior_name = c("Prior_CL_NR", "Prior_VC_NR", "Prior_CL_SLOPE", "Prior_k12", "Prior_k21",
-																					"Prior_CL_NR_omega", "Prior_VC_NR_omega", "Prior_CL_SLOPE_omega", "Prior_k12_omega", "Prior_k21_omega"),
-
-										value = c(0.05, 0.21, 0.75, 1.12, 0.48,
-															cv_to_sd(0.15), cv_to_sd(0.2), cv_to_sd(0.33), cv_to_sd(0.25), cv_to_sd(0.25))
-									),
-
-		"theophiline"= list(
-										name = c("ka", "CL_NR", "VC_NR",
-																"CL_NR_omega", "VC_NR_omega"),
-
-										stan_prior_name = c("Prior_ka", "Prior_CL_NR", "Prior_VC_NR",
-																					"Prior_CL_NR_omega", "Prior_VC_NR_omega"),
-
-										value = c(0.27, 40, 0.5,
-																cv_to_sd(0.15), cv_to_sd(0.2))
-									),
-
-		"phenytoin"= list(
-										name = c("Prior_Vmax", "Prior_Km", "Prior_VD_NR", 
-																"Prior_Vmax_omega", "Prior_Km_omega", "Prior_VD_NR_omega"),
-
-										stan_prior_name = c("Prior_Vmax", "Prior_Km", "Prior_VD_NR", 
-																				"Prior_Vmax_omega", "Prior_Km_omega", "Prior_VD_NR_omega"),
-
-										value = c(500, 5.0, 0.8,
-															cv_to_sd(0.2), cv_to_sd(0.2), cv_to_sd(0.2))
-									))
-
-
+	x <- get_prior(object$drug)
+	
 	check <- (x$name %notin% names(prior))
 
 	for ( i in 1:length(x$name)){
@@ -159,3 +114,70 @@ preprocess_valid_env <- function(object, stan_model_option, stan_sample_option){
 	return(object)
 }
 
+get_sample_data <- function(drug){
+	read.csv(base::file.path(sampleLib(), paste0(drug, ".csv")))
+}
+
+get_prior <- function(drug){
+		x <- 	switch(drug,
+
+		"amikacin" = list(
+										name = c("CL_NR", "VD_NR", "CL_SLOPE", 
+															"CL_NR_omega", "VD_NR_omega", "CL_SLOPE_omega"),
+
+										stan_prior_name = c("Prior_CL_NR", "Prior_VD_NR", "Prior_CL_SLOPE", 
+																					"Prior_CL_NR_omega", "Prior_VD_NR_omega", "Prior_CL_SLOPE_omega"),
+
+										value = c(0.0417, 0.27, 0.815, 
+															cv_to_sd(0.25), cv_to_sd(0.3), cv_to_sd(0.4))
+									),
+									
+		"vancomycin"= list(
+										name = c("CL_NR", "VC_NR", "CL_SLOPE", "k12", "k21",
+														 	"CL_NR_omega", "VC_NR_omega", "CL_SLOPE_omega", "k12_omega", "k21_omega"),
+
+										stan_prior_name = c("Prior_CL_NR", "Prior_VC_NR", "Prior_CL_SLOPE", "Prior_k12", "Prior_k21",
+																					"Prior_CL_NR_omega", "Prior_VC_NR_omega", "Prior_CL_SLOPE_omega", "Prior_k12_omega", "Prior_k21_omega"),
+
+										value = c(0.05, 0.21, 0.75, 1.12, 0.48,
+															cv_to_sd(0.15), cv_to_sd(0.2), cv_to_sd(0.33), cv_to_sd(0.25), cv_to_sd(0.25))
+									),
+
+		"theophiline"= list(
+										name = c("ka", "CL_NR", "VC_NR",
+																"CL_NR_omega", "VC_NR_omega"),
+
+										stan_prior_name = c("Prior_ka", "Prior_CL_NR", "Prior_VC_NR",
+																					"Prior_CL_NR_omega", "Prior_VC_NR_omega"),
+
+										value = c(0.27, 40, 0.5,
+																cv_to_sd(0.15), cv_to_sd(0.2))
+									),
+
+		"phenytoin"= list(
+										name = c("Prior_Vmax", "Prior_Km", "Prior_VD_NR", 
+																"Prior_Vmax_omega", "Prior_Km_omega", "Prior_VD_NR_omega"),
+
+										stan_prior_name = c("Prior_Vmax", "Prior_Km", "Prior_VD_NR", 
+																				"Prior_Vmax_omega", "Prior_Km_omega", "Prior_VD_NR_omega"),
+
+										value = c(500, 5.0, 0.8,
+															cv_to_sd(0.2), cv_to_sd(0.2), cv_to_sd(0.2))
+									))
+}
+
+get_default_prior <- function(drug){
+	
+	default_prior <- NULL
+
+	x <- get_prior(drug)
+	
+
+	for ( i in 1:length(x$name)){
+			default_prior <- append(default_prior, x$value[i])
+	}
+
+	default_prior <- setNames(as.list(default_prior), x$stan_prior_name) 
+	return(default_prior)
+
+}
