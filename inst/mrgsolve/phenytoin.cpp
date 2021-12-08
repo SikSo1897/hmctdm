@@ -9,6 +9,7 @@ req = "VD IPRED", end = 30, rtol=1e-5, delta=0.01
 
 [CMT] @annotated
 CENT : Central compartment (mg)
+AUC  : AUC
 
 [PARAM] @annotated
 CrCL          : 1    : CrCL
@@ -26,6 +27,9 @@ double CL = (CL_SLOPE * CrCL) * 60 / 1000;
 
 [ODE]
 dxdt_CENT    = -(CL + (Norm_Vmax/24) / (Km + CP)) * CP;
+
+dxdt_AUC = CENT/VD;
+if(SS_ADVANCE) dxdt_AUC=0;
 
 [TABLE]
 double IPRED = CP;
