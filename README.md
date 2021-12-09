@@ -174,7 +174,168 @@ mrgmod %>%
 ```
 [![](man/figure/README-plot1-1.png)](#)
 
+#### 5) usage for get recommended dose
+using the mrgsolve model in which the parameters estimated above are used, various dosage regimens can be simulated and drug titration regimens can be obtained. (`get_recommended_dose`, `get_b_cp`)
+
+each parameter used in the function is calculated based on the steady state. In order to know the steady state of the current regimens, you can obtain the result in the steady state by using the following code.
+
+```r
+simdata <- hmctdm$mrgmod %>%
+            mrgsolve::ev(amt=200, ii=12, addl=4, ss=1) %>%  # current regimen with ss=1 added. 
+            mrgsolve::mrgsim(end=48, delta=0.5)
+```
+you can see the result with the code below and the result contains the concentration and AUC for each hour here.
+
+```r
+# data.table
+print(simdata@data) # or simdata
+
+# plot
+simdata %>%
+  mrgsolve::plot(IPRED ~ time)
+```
+
+creating event(regimens) is described in the mrgsolve specific section below, and more detailed information can be found in [mregsolve repository](https://mrgsolve.github.io/).
+
+5-1) `get_b_cp`
+
+`get_b_cp` is a function that calculates the average steady-state concentration($\bar{C_p}$) by inducing the estimated pharmacokinetic parameters with the following equation.
+
+$$
+\overline{C_p} = \frac{-b + \sqrt{b^2 - 4\cdot a \cdot c}}{2 \cdot a}
+$$
+- $r = \frac{D\cdot S\cdot F}{\tau}$
+- $\tau =$ dosing interval
+- $D =$ dose
+- $S =$ salt factor
+- $F =$ bioavailability
+- $a = \frac{CL_{plasma}}{V_d}$
+- $b = \frac{(r-V_{max})-(CL_{plasma} - K_m)}{V_d}$
+- $c = \frac{Km \cdot r}{V_d}$ 
+
+PK parameters as a result of the estimation can be obtained as follows. 
+
+```r
+hmctdm$param
+```
+
+the parameters as the `get_b_cp` parameter to get the result. 
+
+```r
+get_b_Cp(dose=dose, F=F, tau=tau, CLp=CLp, 
+          Vd=Vd, Vmax=Vmax, Km=Km) # default salt_factor=1
+```
+
+
+5-2) `get_recommended_dose`
+
+`get_recommended_dose` calculates the appropriate dose by using the following formula to obtain the target result.
+
+paramerters are `mode`, `target`, `current_dose`, `current_status`, `non-linear pk parameters` 
+
+- `mode` is what you want to target. 
+  - `AUC` is steady-state $AUC_t$ 
+  - `Cp` is steady-state concetration $C_p$
+  - `b_Cp` is average steady-state concentration $\overline{C_p}$
+  
+- `target` is the desired value
+- `current_dose` is dosage of current regimen
+- `current_status` is if the current regimen is maintained, the value at target time
+  ```r
+  simdata <- hmctdm$mrgmod %>%
+            mrgsolve::ev(amt=200, ii=12, addl=4, ss=1) %>%  # current regimen with ss=1 added. 
+            mrgsolve::mrgsim(end=48, delta=0.5)
+
+  ```
+
+- `non-linear pk params`
+  - if `mode` is average steady-state concentration(=`b_Cp`), the following parameters are required. (`Vmax`, `CL_R`, `Km`, `F`, `tau`) 
+ 
+5-2-a) Stedy-state concentration
+$$
+\text{Recommended Dose} = \frac{\text{Current Dose}}{C^{SS}_{t,\text{current dose}}} \times {C^{SS}_{t,\text{target}}}
+$$
+
+5-2-b) Steady-state AUC
+$$
+\text{Recommended Dose} = \frac{\text{Current Dose}}{AUC^{SS}_{t,\text{current dose}}} \times {AUC^{SS}_{t,\text{target}}}
+$$
+
+5-2-c) Average steady-state concentration
+$$
+\text{Recommended Dose} = \frac{V_{max}/24 + CL_r \times (K_m - {\overline C}_\text{target})}{(K_m + {\overline C}_\text{target}) \times F} \times {\overline C}_\text{target} \times \tau
+$$
+
+```r
+get_recommended_dose(mode=mode, target=target, 
+                      current_dose=current_dose,
+                      current_status=current_status,
+                      ...)
+# ... is non-linear pk params. if mode use b_Cp, have to insert non-linear pk params like Vmax mentioned at above phrase
+```
+
 ## Specific
+
+### 1) mrgsolve specific
+this session is introduction to `mrgsolve` model object, focusing on the simulation used in `hcmtdmr`. if you want to know more details, for more information at [mregsolve repository](https://mrgsolve.github.io/).
+
+```R
+# how to get mrgsolve model object at result
+est <- hmctdmr::hmctdmrest(...)
+mrgmod <- est$mrgmod
+
+# or if you want to get default mrgsolve model in package
+mrgmod <- hmctdmr::get_mrgmod(drug="drug") # drug, amikacin, vanocomycin ...
+```
+
+the overall process of using mrgsolve in a package is as follows step. step-1) define a pharmacokinetic model, step-2) enter patient information in the model, step-3) generate a dosing event. step-4) Run the simulation. the package returns an object that has progressed up to step-2.
+
+information about model details can be obtained by printing the object.
+```r
+print(mrgmod)
+# ---------------  source: amikacin.cpp  ---------------
+
+#   project: ...inst/mrgsolve
+#   shared object: amikacin-so-22cda12102f 
+
+#   time:          start: 0 end: 30 delta: 0.5
+#                  add: <none>
+
+#   compartments:  CENT [1]
+#   parameters:    WT LBW CLCR CL_NR CL_SLOPE VD_NR
+#                  VD_SLOPE UNIT_CL [8]
+#   captures:      CL VD IPRED [3]
+#   omega:         0x0 
+#   sigma:         0x0 
+
+#   solver:        atol: 1e-08 rtol: 1e-05 maxsteps: 20k
+# ------------------------------------------------------
+```
+step-3 and 4 provide simulations that allow users to experiment with different drug regimens. (to improve regimen) it proceeds in the form of example-4 (prediction). 
+
+```r
+mrgmod <- hmctdm$mrgmod %>%  
+  mrgsolve::ev(amt=1000) %>% 
+  mrgsolve::mrgsim(end=48, delta=0.5)  
+```
+- `ev`
+- `mrgsim`
+
+1-1) event
+```R
+event <- mrgsolve::ev()
+
+# or multiple event
+event <- mrgsolve::expand.ev()
+
+```
+
+1-2) mrgsim
+
+```R
+```
+
+### 2) hmctdm specific 
 `hmctdmrest` takes the following parameters:
 
 ```r
@@ -194,6 +355,21 @@ hmctdmrest can be given the following parameters:
   - phenytoine
   
 #### `data`
+checking the sample data as using `get_sample_data` and bring data of type `data.frame` or `tibble` by format of sample data. 
+
+```r
+sample_data <- hmctdmr::get_sample_data(drug="amikacin")
+sample_data
+
+#   ID time evid amt cmt ss ii addl rate SEX AGE       WT       HT      SCR      DV
+# 1  1    0    1 500   1  0  0    0 1000   1  79 43.97928 155.7253 1.072065  0.0000
+# 2  1    1    0   0   1  0  0    0    0   1  79 43.97928 155.7253 1.072065 28.5206
+```
+- `ID` is subject indicator.
+- `time`, `evid`, `amt`, `cmt`, `ss`, `ii`, `addl`, `rate` are described in the mrgsolve specific section..
+- `SEX`, `AGE`, `WT`, `HT` are demographics. (sex, age, weight, height)
+- `SCR`, `DV` is serum creatinine and concentration.
+
 
 #### `prior`
 It can be changed by passing the prior parameter in the list.
@@ -236,6 +412,7 @@ stan_model_option is an option for creating a new CmdStanModel object from a fil
 #### `stan_sample_option`
 stan_sample_option is option of `$sample()` method CmdStanModel objcet runs the default MCMC algorithm in CmdStan (algorithm = hmc, engine=nuts). More information on the options can be found [here](https://mc-stan.org/cmdstanr/reference/model-method-sample.html)
 
+ 
 ## Development
 hmctdm is under development. Your feedback for additional feature requests or bug reporting is welcome. Contact us through the issue tracker.
 
