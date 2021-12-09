@@ -201,6 +201,7 @@ creating event(regimens) is described in the mrgsolve specific section below, an
 
 `get_b_cp` is a function that calculates the average steady-state concentration(![formula](https://render.githubusercontent.com/render/math?math=\bar{C_p})) by inducing the estimated pharmacokinetic parameters with the following equation.
 
+<<<<<<< HEAD
 <p align="center">
   <img src="https://render.githubusercontent.com/render/math?math=\overline{C_p}=\frac{-b+\sqrt{b^2-4\cdot{a}\cdot{c}}}{2\cdot{a}}" />
 </p>
