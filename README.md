@@ -197,39 +197,7 @@ simdata %>%
 
 creating event(regimens) is described in the mrgsolve specific section below, and more detailed information can be found in [mregsolve repository](https://mrgsolve.github.io/).
 
-**5-1) `get_b_cp`**
-
-`get_b_cp` is a function that calculates the average steady-state concentration(![formula](https://render.githubusercontent.com/render/math?math=\bar{C_p})) by inducing the estimated pharmacokinetic parameters with the following equation.
-
-<p align="center">
-  <img src="https://render.githubusercontent.com/render/math?math=\overline{C_p}=\frac{-b+\sqrt{b^2-4\cdot{a}\cdot{c}}}{2\cdot{a}}" />
-</p>
-
-- ![formula](https://render.githubusercontent.com/render/math?math=\tau), dosing interval
-- ![formula](https://render.githubusercontent.com/render/math?math=D), dose
-- ![formula](https://render.githubusercontent.com/render/math?math=S), salt factor
-- ![formula](https://render.githubusercontent.com/render/math?math=F), bioavailability
-  
-- ![formula](https://render.githubusercontent.com/render/math?math=r=\frac{D\cdot{S}\cdot{F}}{\tau})
-- ![formula](https://render.githubusercontent.com/render/math?math=a=\frac{CL_{plasma}}{V_d})
-- ![formula](https://render.githubusercontent.com/render/math?math=b=\frac{(r-V_{max})-(CL_{plasma}-K_m)}{V_d})
-- ![formula](https://render.githubusercontent.com/render/math?math=c=\frac{Km\cdot{r}}{V_d})
-
-PK parameters as a result of the estimation can be obtained as follows. 
-
-```r
-hmctdm$param
-```
-
-the parameters as the `get_b_cp` parameter to get the result. 
-
-```r
-get_b_Cp(dose=dose, F=F, tau=tau, CLp=CLp, 
-          Vd=Vd, Vmax=Vmax, Km=Km) # default salt_factor=1
-```
-
-
-**5-2) `get_recommended_dose`**
+**5-1) `get_recommended_dose`**
 
 `get_recommended_dose` calculates the appropriate dose by using the following formula to obtain the target result.
 
@@ -253,18 +221,22 @@ paramerters are `mode`, `target`, `current_dose`, `current_status`, `non-linear 
 - `non-linear pk params`
   - if `mode` is average steady-state concentration(=`b_Cp`), the following parameters are required. (`Vmax`, `CL_R`, `Km`, `F`, `tau`) 
  
-**5-2-a) Stedy-state concentration**
+**5-2) Stedy-state concentration**
 
 ![formula](https://render.githubusercontent.com/render/math?math=\text{Recommended_Dose}=\frac{\text{Current_Dose}}{C^{SS}_{t,\text{current_dose}}}\times{C^{SS}_{t,\text{target}}})
 
 
-**5-2-b) Steady-state AUC**
+**5-3) Steady-state AUC**
 
 ![formula](https://render.githubusercontent.com/render/math?math=\text{Recommended_Dose}=\frac{\text{Current_Dose}}{AUC^{SS}_{t,\text{current_dose}}}\times{AUC^{SS}_{t,\text{target}}})
 
-**5-2-c) Average steady-state concentration**
+**5-4) Average steady-state concentration**
 
-<img src="https://render.githubusercontent.com/render/math?math=\text{Recommended Dose} = \frac{V_{max}/24 %2B CL_r \times (K_m - {\overline C}_\text{target})}{(K_m %2B {\overline C}_\text{target}) \times F} \times {\overline C}_\text{target} \times \tau">
+<img src="https://render.githubusercontent.com/render/math?math=\text{Average concentration} (\overline{C}_\text{Dose}) = \frac{AUC^{SS}_{\tau, Dose}}{\tau}">
+<br/><br/>
+<img src="https://render.githubusercontent.com/render/math?math=\text{Recommended_Dose}=\frac{\text{Current_Dose}}{\overline{C}_\text{current dose}}\times{\overline{C}_\text{target}}">
+
+
 
 ```r
 get_recommended_dose(mode=mode, target=target, 
